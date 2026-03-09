@@ -72,12 +72,12 @@
             document.getElementById('aiEvalResult').style.display = 'none';
             document.getElementById('aiEvalStatus').textContent = '';
             document.getElementById('aiEvalStatus').className = 'ai-eval-status';
-            document.getElementById('diffDxSection').style.display = 'none';
-            document.getElementById('diffDxResult').style.display = 'none';
-            document.getElementById('diffDxStatus').textContent = '';
-            document.getElementById('deepClinicalToggle').checked = false;
-            document.getElementById('deepClinicalDisclaimer').style.display = 'none';
-            diffDxQuestionsData = [];
+            document.getElementById('followUpSection').style.display = 'none';
+            document.getElementById('followUpStatus').textContent = '';
+            document.getElementById('followUpStatus').className = 'ai-eval-status';
+            followUpQuestionsData = [];
+            answersHistory = [];
+            currentRound = 0;
             // Clear all answers
             document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
             updateProgress();

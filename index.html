@@ -775,72 +775,32 @@
                         <div class="api-key-note">Your key is used once, in-browser only. It is never stored or
                             transmitted elsewhere.</div>
                     </div>
-                    <button class="submit-btn ai-eval-btn" id="aiEvalBtn" onclick="generateEvaluation()">Generate
-                        Evaluation</button>
-                </div>
-
-                <!-- Deeper Clinical Context Toggle -->
-                <div class="deep-clinical-toggle-wrap">
-                    <div class="toggle-row">
-                        <label class="toggle-switch">
-                            <input type="checkbox" id="deepClinicalToggle" onchange="onDeepClinicalToggle()">
-                            <span class="toggle-slider"></span>
-                        </label>
-                        <div class="toggle-label-group">
-                            <div class="toggle-label-main">Deeper Clinical Context</div>
-                            <div class="toggle-label-sub">Enables differential diagnostic screening, associated DSM/ICD
-                                conditions, and recommended assessment instruments</div>
-                        </div>
-                    </div>
-                    <div id="deepClinicalDisclaimer" class="deep-clinical-disclaimer" style="display:none;">
-                        <div class="disclaimer-icon">
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c4703a"
-                                stroke-width="2">
-                                <path
-                                    d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
-                                <line x1="12" y1="9" x2="12" y2="13" />
-                                <line x1="12" y1="17" x2="12.01" y2="17" />
-                            </svg>
-                        </div>
-                        <div class="disclaimer-text">
-                            <strong>Pseudo-Diagnostic Disclaimer</strong><br>
-                            The information generated with this option is an <strong>AI-generated
-                                pseudo-diagnosis</strong> — it is <strong>not clinically valid</strong> and does not
-                            constitute a formal diagnosis under any standard. The conditions suggested are potential
-                            associations, hints, and common comorbidity patterns based on your schema profile. They
-                            represent what a clinician <em>might consider exploring</em>, not what you have. Only a
-                            licensed professional using validated structured interviews can make a clinical diagnosis.
-                            Use this as a starting point for self-awareness and informed conversation with a therapist —
-                            nothing more.
-                        </div>
-                    </div>
+                    <button class="submit-btn ai-eval-btn" id="aiEvalBtn" onclick="startEvaluation()">Begin AI Evaluation</button>
                 </div>
 
                 <div id="aiEvalStatus" class="ai-eval-status"></div>
-                <div id="aiEvalResult" class="ai-eval-result" style="display:none;"></div>
 
-                <!-- Differential Diagnostic Questionnaire (dynamically populated) -->
-                <div id="diffDxSection" style="display:none;">
+                <!-- Follow-Up Questions (dynamically populated) -->
+                <div id="followUpSection" style="display:none;">
                     <div class="diff-dx-header">
                         <div class="results-section-title" style="margin-top:48px;">
-                            <span>Differential Diagnostic Screening</span>
+                            <span>Follow-Up Questions</span>
                         </div>
                         <div class="diff-dx-intro">
-                            Based on your schema profile, the following clinical questions help differentiate between
-                            conditions that commonly present with these patterns. Answer each as it applies to you
-                            <strong>over the past 12 months</strong>. This is not a diagnostic test — it provides
-                            additional context for the AI evaluation.
+                            Based on your schema profile, the following questions help build a more complete clinical
+                            picture. Answer each honestly as it applies to you. This is not a diagnostic test — your
+                            responses will be integrated into the final evaluation.
                         </div>
                     </div>
-                    <div id="diffDxQuestions" class="diff-dx-questions"></div>
+                    <div id="followUpQuestions" class="diff-dx-questions"></div>
                     <div class="diff-dx-progress-row">
-                        <div class="diff-dx-progress-text" id="diffDxProgressText">0 / 0 answered</div>
-                        <button class="submit-btn" id="diffDxSubmitBtn" onclick="submitDiffDx()">Generate Diagnostic
-                            Impressions</button>
+                        <div class="diff-dx-progress-text" id="followUpProgressText">0 / 0 answered</div>
+                        <button class="submit-btn" id="followUpSubmitBtn" onclick="submitAnswers()">Submit Answers</button>
                     </div>
-                    <div id="diffDxStatus" class="ai-eval-status"></div>
-                    <div id="diffDxResult" class="ai-eval-result" style="display:none;"></div>
+                    <div id="followUpStatus" class="ai-eval-status"></div>
                 </div>
+
+                <div id="aiEvalResult" class="ai-eval-result" style="display:none;"></div>
             </div>
 
             <div class="submit-wrap" style="padding-top:24px;">
@@ -855,7 +815,6 @@
     <script src="js/ui.js"></script>
     <script src="js/results.js"></script>
     <script src="js/ai-eval.js"></script>
-    <script src="js/ai-diffdx.js"></script>
     <script src="js/questionnaire.js"></script>
 </body>
 </html>
