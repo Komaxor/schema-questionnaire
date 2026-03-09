@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Young Schema Questionnaire</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <div class="cover">
+        <div class="cover-inner">
+            <div class="cover-label">Schema Therapy Assessment</div>
+            <h1>Young Schema<br><em>Questionnaire</em></h1>
+            <p class="cover-desc">
+                Below are statements that a person might use to describe themselves. For each statement,
+                rate how well it describes you using the scale below. There are no right or wrong answers —
+                respond based on how you genuinely feel, not how you think you should feel.
+            </p>
+            <div class="scale-legend">
+                <div class="scale-item"><span class="scale-num">1</span> Completely untrue of me</div>
+                <div class="scale-item"><span class="scale-num">2</span> Mostly untrue of me</div>
+                <div class="scale-item"><span class="scale-num">3</span> Slightly more true than untrue</div>
+                <div class="scale-item"><span class="scale-num">4</span> Moderately true of me</div>
+                <div class="scale-item"><span class="scale-num">5</span> Mostly true of me</div>
+                <div class="scale-item"><span class="scale-num">6</span> Describes me perfectly</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="progress-bar-wrap">
+        <div class="progress-bar-track">
+            <div class="progress-bar-fill" id="progressFill"></div>
+        </div>
+        <div class="progress-text" id="progressText">0 / 90 answered</div>
+    </div>
+
+    <div class="main">
+
+        <!-- DOMAIN 1 -->
+        <div class="domain-block">
+            <div class="domain-header">
+                <div class="domain-number">I</div>
+                <div class="domain-info">
+                    <div class="domain-name">Disconnection &amp; Rejection</div>
+                    <div class="domain-subtitle">Domain 1 · 5 schemas</div>
+                </div>
+            </div>
+
+            <!-- Schema 1: Abandonment -->
+            <div class="schema-block">
+                <div class="schema-header">
+                    <div class="schema-badge">1</div>
+                    <div class="schema-name">Abandonment / Instability</div>
+                    <div class="schema-desc">Fear that those you love will leave or be unpredictable</div>
+                </div>
+                <div class="questions" id="s1">
+                    <div class="question-row">
+                        <div class="question-text">I worry a great deal that the people I love will die or leave me.
+                        </div>
+                        <div class="rating-group" id="q1"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I cling to people close to me because I'm afraid they'll leave me.
+                        </div>
+                        <div class="rating-group" id="q2"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I need so much love and support from others that people get tired of
+                            giving it to me.</div>
+                        <div class="rating-group" id="q3"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I feel that people won't stay with me — they will eventually leave me
+                            for someone better.</div>
+                        <div class="rating-group" id="q4"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">People who were close to me have been unpredictable — one moment they
+                            were there, the next they were gone.</div>
+                        <div class="rating-group" id="q5"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schema 2: Mistrust/Abuse -->
+            <div class="schema-block">
+                <div class="schema-header">
+                    <div class="schema-badge">2</div>
+                    <div class="schema-name">Mistrust / Abuse</div>
+                    <div class="schema-desc">Expectation of being hurt, abused, or manipulated</div>
+                </div>
+                <div class="questions">
+                    <div class="question-row">
+                        <div class="question-text">I feel that people will take advantage of me if I let them.</div>
+                        <div class="rating-group" id="q6"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I feel that I cannot let my guard down around other people, or they
+                            will intentionally hurt me.</div>
+                        <div class="rating-group" id="q7"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I feel that people will take advantage of me.</div>
+                        <div class="rating-group" id="q8"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">Throughout my life, people close to me have abused, used, or
+                            humiliated me.</div>
+                        <div class="rating-group" id="q9"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">It's only a matter of time before someone betrays me, even in a close
+                            relationship.</div>
+                        <div class="rating-group" id="q10"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schema 3: Emotional Deprivation -->
+            <div class="schema-block">
+                <div class="schema-header">
+                    <div class="schema-badge">3</div>
+                    <div class="schema-name">Emotional Deprivation</div>
+                    <div class="schema-desc">Belief that emotional needs will never be adequately met</div>
+                </div>
+                <div class="questions">
+                    <div class="question-row">
+                        <div class="question-text">I haven't had anyone to nurture me, share themselves with me, or care
+                            deeply about what happens to me.</div>
+                        <div class="rating-group" id="q11"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">For most of my life, I haven't had someone who wanted to be close to
+                            me and spend time with me.</div>
+                        <div class="rating-group" id="q12"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">For the most part I have not had someone who really listened to me,
+                            understood me, or tuned in to my true needs and feelings.</div>
+                        <div class="rating-group" id="q13"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I rarely have a person who gives me warmth and is affectionate toward
+                            me.</div>
+                        <div class="rating-group" id="q14"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I don't feel that people have been there to guide, support, or
+                            protect me.</div>
+                        <div class="rating-group" id="q15"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schema 4: Defectiveness/Shame -->
+            <div class="schema-block">
+                <div class="schema-header">
+                    <div class="schema-badge">4</div>
+                    <div class="schema-name">Defectiveness / Shame</div>
+                    <div class="schema-desc">Feeling flawed, inferior, or fundamentally unlovable</div>
+                </div>
+                <div class="questions">
+                    <div class="question-row">
+                        <div class="question-text">No man/woman I desire could love me once he/she saw my defects.</div>
+                        <div class="rating-group" id="q16"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I am inherently flawed and defective — no one would want me if they
+                            really knew me.</div>
+                        <div class="rating-group" id="q17"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I'm unworthy of the love, attention, and respect of others.</div>
+                        <div class="rating-group" id="q18"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I feel that I'm not loveable.</div>
+                        <div class="rating-group" id="q19"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I feel like I'm different from other people — I don't really belong
+                            anywhere.</div>
+                        <div class="rating-group" id="q20"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schema 5: Social Isolation -->
+            <div class="schema-block">
+                <div class="schema-header">
+                    <div class="schema-badge">5</div>
+                    <div class="schema-name">Social Isolation / Alienation</div>
+                    <div class="schema-desc">Feeling apart from the rest of the world</div>
+                </div>
+                <div class="questions">
+                    <div class="question-row">
+                        <div class="question-text">I feel alienated from other people.</div>
+                        <div class="rating-group" id="q21"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I feel isolated and alone in the world.</div>
+                        <div class="rating-group" id="q22"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I don't fit in anywhere.</div>
+                        <div class="rating-group" id="q23"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I always feel on the outside of groups.</div>
+                        <div class="rating-group" id="q24"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">Although I'm around people, I feel like a stranger.</div>
+                        <div class="rating-group" id="q25"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DOMAIN 2 -->
+        <div class="domain-block">
+            <div class="domain-header">
+                <div class="domain-number">II</div>
+                <div class="domain-info">
+                    <div class="domain-name">Impaired Autonomy &amp; Performance</div>
+                    <div class="domain-subtitle">Domain 2 · 4 schemas</div>
+                </div>
+            </div>
+
+            <!-- Schema 6: Dependence/Incompetence -->
+            <div class="schema-block">
+                <div class="schema-header">
+                    <div class="schema-badge">6</div>
+                    <div class="schema-name">Dependence / Incompetence</div>
+                    <div class="schema-desc">Belief that one cannot handle daily responsibilities without help</div>
+                </div>
+                <div class="questions">
+                    <div class="question-row">
+                        <div class="question-text">I don't feel capable of managing day-to-day responsibilities on my
+                            own.</div>
+                        <div class="rating-group" id="q26"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I think of myself as a very dependent person.</div>
+                        <div class="rating-group" id="q27"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I need other people to help me manage my daily life.</div>
+                        <div class="rating-group" id="q28"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I'm not confident in my ability to solve everyday problems that come
+                            up.</div>
+                        <div class="rating-group" id="q29"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I don't trust my own judgment enough to make important decisions
+                            without significant input from others.</div>
+                        <div class="rating-group" id="q30"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schema 7: Vulnerability -->
+            <div class="schema-block">
+                <div class="schema-header">
+                    <div class="schema-badge">7</div>
+                    <div class="schema-name">Vulnerability to Harm or Illness</div>
+                    <div class="schema-desc">Exaggerated fear of imminent catastrophe</div>
+                </div>
+                <div class="questions">
+                    <div class="question-row">
+                        <div class="question-text">I worry that I'm about to lose all my money and become impoverished.
+                        </div>
+                        <div class="rating-group" id="q31"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I worry about being attacked.</div>
+                        <div class="rating-group" id="q32"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I worry a lot that I have, or will get, a serious illness, even
+                            though nothing serious has been diagnosed by a doctor.</div>
+                        <div class="rating-group" id="q33"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I feel that a major catastrophe (natural, criminal, financial,
+                            medical) could strike at any time.</div>
+                        <div class="rating-group" id="q34"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I cannot escape the feeling that something bad is about to happen.
+                        </div>
+                        <div class="rating-group" id="q35"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schema 8: Enmeshment -->
+            <div class="schema-block">
+                <div class="schema-header">
+                    <div class="schema-badge">8</div>
+                    <div class="schema-name">Enmeshment / Undeveloped Self</div>
+                    <div class="schema-desc">Excessive emotional involvement with others at the expense of identity
+                    </div>
+                </div>
+                <div class="questions">
+                    <div class="question-row">
+                        <div class="question-text">I have not been able to separate myself from my parents the way other
+                            people my age seem to.</div>
+                        <div class="rating-group" id="q36"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I often feel as if my parent or partner is living through me — like I
+                            don't have a life of my own.</div>
+                        <div class="rating-group" id="q37"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I am very close to a parent or partner and we are so involved with
+                            each other that it creates problems for both of us.</div>
+                        <div class="rating-group" id="q38"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">It's hard for me to keep my views separate from those of my parent(s)
+                            or partner.</div>
+                        <div class="rating-group" id="q39"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I often feel that I don't know who I am or what I want.</div>
+                        <div class="rating-group" id="q40"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schema 9: Failure -->
+            <div class="schema-block">
+                <div class="schema-header">
+                    <div class="schema-badge">9</div>
+                    <div class="schema-name">Failure</div>
+                    <div class="schema-desc">Belief that one has failed or will inevitably fail</div>
+                </div>
+                <div class="questions">
+                    <div class="question-row">
+                        <div class="question-text">I am basically a failure when it comes to achievement.</div>
+                        <div class="rating-group" id="q41"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">Most people are more capable than I am in areas of work and
+                            achievement.</div>
+                        <div class="rating-group" id="q42"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I was a failure as a student.</div>
+                        <div class="rating-group" id="q43"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I feel that I am not as successful as others my age.</div>
+                        <div class="rating-group" id="q44"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I feel that I don't have the natural talent that most people have at
+                            their jobs.</div>
+                        <div class="rating-group" id="q45"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DOMAIN 3 -->
+        <div class="domain-block">
+            <div class="domain-header">
+                <div class="domain-number">III</div>
+                <div class="domain-info">
+                    <div class="domain-name">Impaired Limits</div>
+                    <div class="domain-subtitle">Domain 3 · 2 schemas</div>
+                </div>
+            </div>
+
+            <!-- Schema 10: Entitlement -->
+            <div class="schema-block">
+                <div class="schema-header">
+                    <div class="schema-badge">10</div>
+                    <div class="schema-name">Entitlement / Grandiosity</div>
+                    <div class="schema-desc">Belief of being superior and entitled to special rights</div>
+                </div>
+                <div class="questions">
+                    <div class="question-row">
+                        <div class="question-text">I have trouble accepting "no" for an answer when I want something
+                            from other people.</div>
+                        <div class="rating-group" id="q46"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I'm special and shouldn't have to accept the restrictions other
+                            people do.</div>
+                        <div class="rating-group" id="q47"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I hate to be constrained or kept from doing what I want.</div>
+                        <div class="rating-group" id="q48"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I feel that I shouldn't have to follow the normal rules that apply to
+                            others.</div>
+                        <div class="rating-group" id="q49"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I feel that what I have to offer is of greater value than the
+                            contributions of others.</div>
+                        <div class="rating-group" id="q50"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schema 11: Insufficient Self-Control -->
+            <div class="schema-block">
+                <div class="schema-header">
+                    <div class="schema-badge">11</div>
+                    <div class="schema-name">Insufficient Self-Control / Self-Discipline</div>
+                    <div class="schema-desc">Difficulty tolerating frustration or controlling impulses</div>
+                </div>
+                <div class="questions">
+                    <div class="question-row">
+                        <div class="question-text">I can't seem to make myself do what I need to do to reach my goals.
+                        </div>
+                        <div class="rating-group" id="q51"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I have a lot of difficulty tolerating frustration — things must
+                            happen now.</div>
+                        <div class="rating-group" id="q52"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I find myself unable to stop myself from expressing negative feelings
+                            when they upset me.</div>
+                        <div class="rating-group" id="q53"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">It's difficult for me to begin new tasks if I find them boring or
+                            routine.</div>
+                        <div class="rating-group" id="q54"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">If I can't reach a goal, I become easily frustrated and give up.
+                        </div>
+                        <div class="rating-group" id="q55"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DOMAIN 4 -->
+        <div class="domain-block">
+            <div class="domain-header">
+                <div class="domain-number">IV</div>
+                <div class="domain-info">
+                    <div class="domain-name">Other-Directedness</div>
+                    <div class="domain-subtitle">Domain 4 · 3 schemas</div>
+                </div>
+            </div>
+
+            <!-- Schema 12: Subjugation -->
+            <div class="schema-block">
+                <div class="schema-header">
+                    <div class="schema-badge">12</div>
+                    <div class="schema-name">Subjugation</div>
+                    <div class="schema-desc">Surrendering control to others to avoid negative consequences</div>
+                </div>
+                <div class="questions">
+                    <div class="question-row">
+                        <div class="question-text">I let others control me more than I should.</div>
+                        <div class="rating-group" id="q56"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I'm too passive, waiting for things to happen rather than making them
+                            happen.</div>
+                        <div class="rating-group" id="q57"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">People end up controlling me.</div>
+                        <div class="rating-group" id="q58"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I have always let others make choices for me, so I really don't know
+                            what I want for myself.</div>
+                        <div class="rating-group" id="q59"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I feel that I have no choice but to give in to other people's wishes,
+                            otherwise they will retaliate or reject me in some way.</div>
+                        <div class="rating-group" id="q60"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schema 13: Self-Sacrifice -->
+            <div class="schema-block">
+                <div class="schema-header">
+                    <div class="schema-badge">13</div>
+                    <div class="schema-name">Self-Sacrifice</div>
+                    <div class="schema-desc">Excessive focus on meeting others' needs at one's own expense</div>
+                </div>
+                <div class="questions">
+                    <div class="question-row">
+                        <div class="question-text">I'm the one who usually ends up taking care of the people I'm close
+                            to.</div>
+                        <div class="rating-group" id="q61"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I'm a good person because I think of others more than myself.</div>
+                        <div class="rating-group" id="q62"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I'm so busy doing for the people I care about that I have little time
+                            for myself.</div>
+                        <div class="rating-group" id="q63"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I sacrifice my own needs for those of the people I care about.</div>
+                        <div class="rating-group" id="q64"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I often feel that there is not enough time for me to meet my own
+                            needs, because I am always taking care of the needs of others.</div>
+                        <div class="rating-group" id="q65"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schema 14: Approval-Seeking -->
+            <div class="schema-block">
+                <div class="schema-header">
+                    <div class="schema-badge">14</div>
+                    <div class="schema-name">Approval-Seeking / Recognition-Seeking</div>
+                    <div class="schema-desc">Excessive reliance on others' reactions for self-esteem</div>
+                </div>
+                <div class="questions">
+                    <div class="question-row">
+                        <div class="question-text">My self-esteem depends a great deal on what others think of me.</div>
+                        <div class="rating-group" id="q66"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I go out of my way to be liked by others.</div>
+                        <div class="rating-group" id="q67"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I need to be seen as accomplished or important by the people around
+                            me.</div>
+                        <div class="rating-group" id="q68"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I try to do my best in order to get approval from others.</div>
+                        <div class="rating-group" id="q69"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">It's very important to me to be liked by a wide range of people.
+                        </div>
+                        <div class="rating-group" id="q70"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DOMAIN 5 -->
+        <div class="domain-block">
+            <div class="domain-header">
+                <div class="domain-number">V</div>
+                <div class="domain-info">
+                    <div class="domain-name">Overvigilance &amp; Inhibition</div>
+                    <div class="domain-subtitle">Domain 5 · 4 schemas</div>
+                </div>
+            </div>
+
+            <!-- Schema 15: Negativity/Pessimism -->
+            <div class="schema-block">
+                <div class="schema-header">
+                    <div class="schema-badge">15</div>
+                    <div class="schema-name">Negativity / Pessimism</div>
+                    <div class="schema-desc">Pervasive focus on negative aspects while minimizing the positive</div>
+                </div>
+                <div class="questions">
+                    <div class="question-row">
+                        <div class="question-text">I focus on the negative aspects of things.</div>
+                        <div class="rating-group" id="q71"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I can't get my mind off of things that might go wrong.</div>
+                        <div class="rating-group" id="q72"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">It's all right to be happy one moment, but the next moment things
+                            could go wrong.</div>
+                        <div class="rating-group" id="q73"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I tend to be a pessimist, always expecting the worst.</div>
+                        <div class="rating-group" id="q74"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">One of my biggest fears is that things will go terribly wrong for me
+                            in the future.</div>
+                        <div class="rating-group" id="q75"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schema 16: Emotional Inhibition -->
+            <div class="schema-block">
+                <div class="schema-header">
+                    <div class="schema-badge">16</div>
+                    <div class="schema-name">Emotional Inhibition</div>
+                    <div class="schema-desc">Suppression of emotions to avoid loss of control or embarrassment</div>
+                </div>
+                <div class="questions">
+                    <div class="question-row">
+                        <div class="question-text">I find it embarrassing to express my feelings to others.</div>
+                        <div class="rating-group" id="q76"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I find it hard to be warm and spontaneous.</div>
+                        <div class="rating-group" id="q77"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I control myself so much that people think I am unemotional.</div>
+                        <div class="rating-group" id="q78"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I feel that I must keep my feelings inside and not show them to
+                            others.</div>
+                        <div class="rating-group" id="q79"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">Others see me as uptight emotionally.</div>
+                        <div class="rating-group" id="q80"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schema 17: Unrelenting Standards -->
+            <div class="schema-block">
+                <div class="schema-header">
+                    <div class="schema-badge">17</div>
+                    <div class="schema-name">Unrelenting Standards / Hypercriticalness</div>
+                    <div class="schema-desc">Striving to meet extremely high self-imposed standards</div>
+                </div>
+                <div class="questions">
+                    <div class="question-row">
+                        <div class="question-text">I must be the best at most of what I do; I can't accept second best.
+                        </div>
+                        <div class="rating-group" id="q81"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I strive to keep everything in perfect order.</div>
+                        <div class="rating-group" id="q82"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I must look my best most of the time.</div>
+                        <div class="rating-group" id="q83"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I have so much to accomplish that there is no time to really relax.
+                        </div>
+                        <div class="rating-group" id="q84"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">Almost nothing I do is quite good enough — I can always do better.
+                        </div>
+                        <div class="rating-group" id="q85"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Schema 18: Punitiveness -->
+            <div class="schema-block">
+                <div class="schema-header">
+                    <div class="schema-badge">18</div>
+                    <div class="schema-name">Punitiveness</div>
+                    <div class="schema-desc">Belief that people deserve harsh punishment for mistakes</div>
+                </div>
+                <div class="questions">
+                    <div class="question-row">
+                        <div class="question-text">I believe if you make a mistake, you deserve to be punished.</div>
+                        <div class="rating-group" id="q86"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I have very little patience for people who make excuses for their bad
+                            behavior — they deserve to be punished.</div>
+                        <div class="rating-group" id="q87"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I am a very demanding person — I feel that people should be punished
+                            for their mistakes.</div>
+                        <div class="rating-group" id="q88"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I find it very difficult to forgive mistakes in myself or others.
+                        </div>
+                        <div class="rating-group" id="q89"></div>
+                    </div>
+                    <div class="question-row">
+                        <div class="question-text">I expect people to pay dearly for their errors.</div>
+                        <div class="rating-group" id="q90"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="submit-wrap">
+            <button class="submit-btn" id="submitBtn" onclick="handleSubmit()">View My Results</button>
+            <div class="submit-note" id="submitNote">Answer all 90 questions to generate your results.</div>
+        </div>
+
+    </div>
+
+    <!-- RESULTS PANEL -->
+    <div id="resultsPanel" style="display:none;">
+        <div class="results-cover">
+            <div class="results-cover-inner">
+                <div class="cover-label">Your Results</div>
+                <h2 class="results-title">Schema <em>Profile</em></h2>
+                <p class="results-intro">Below is your scored profile across all 18 schemas. Scores reflect your average
+                    rating (1–6) per schema. A mean of <strong>4.0 or above</strong> is considered clinically elevated.
+                    This is not a diagnosis — share results with a qualified schema therapist for proper interpretation.
+                </p>
+                <div id="summaryStats" class="summary-stats"></div>
+            </div>
+        </div>
+
+        <div class="results-main">
+
+            <div class="results-section-title">
+                <span>Full Schema Profile</span>
+                <span class="legend-row"><span class="leg-dot" style="background:#e8c97a"></span>Moderate (3–3.9) &nbsp;
+                    <span class="leg-dot" style="background:#c4703a"></span>Elevated (4–4.9) &nbsp; <span
+                        class="leg-dot" style="background:#8b1a1a"></span>High (5–6)</span>
+            </div>
+
+            <div id="allSchemasBars" class="bars-grid"></div>
+
+            <div class="results-section-title" style="margin-top:56px;">Domain Scores</div>
+            <div id="domainBars" class="domain-bars"></div>
+
+            <div class="results-section-title" style="margin-top:56px;">Top 5 Schemas to Explore</div>
+            <div id="topSchemas" class="top-schemas"></div>
+
+            <div class="disclaimer-box">
+                <strong>Important:</strong> This questionnaire is a self-report screening tool based on Young's Schema
+                Therapy model. Elevated scores indicate patterns worth exploring, not a clinical diagnosis. Please
+                consult a licensed psychologist or schema therapist for professional assessment and support.
+            </div>
+
+            <!-- AI Professional Evaluation Section -->
+            <div class="ai-eval-section">
+                <div class="results-section-title" style="margin-top:56px;">Professional Evaluation</div>
+                <div class="ai-eval-intro">
+                    Generate a detailed clinical-style evaluation of your schema profile using AI. Your data stays local
+                    — the API call goes directly from your browser to OpenAI. No intermediary servers.
+                </div>
+                <div class="api-key-row">
+                    <div class="api-key-field">
+                        <label for="apiKeyInput">OpenAI API Key</label>
+                        <div class="api-input-wrap">
+                            <input type="password" id="apiKeyInput" placeholder="sk-..." autocomplete="off"
+                                spellcheck="false">
+                            <button class="toggle-vis-btn" onclick="toggleKeyVis()" title="Toggle visibility"
+                                aria-label="Toggle key visibility">
+                                <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                    <circle cx="12" cy="12" r="3" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="api-key-note">Your key is used once, in-browser only. It is never stored or
+                            transmitted elsewhere.</div>
+                    </div>
+                    <button class="submit-btn ai-eval-btn" id="aiEvalBtn" onclick="generateEvaluation()">Generate
+                        Evaluation</button>
+                </div>
+
+                <!-- Deeper Clinical Context Toggle -->
+                <div class="deep-clinical-toggle-wrap">
+                    <div class="toggle-row">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="deepClinicalToggle" onchange="onDeepClinicalToggle()">
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <div class="toggle-label-group">
+                            <div class="toggle-label-main">Deeper Clinical Context</div>
+                            <div class="toggle-label-sub">Enables differential diagnostic screening, associated DSM/ICD
+                                conditions, and recommended assessment instruments</div>
+                        </div>
+                    </div>
+                    <div id="deepClinicalDisclaimer" class="deep-clinical-disclaimer" style="display:none;">
+                        <div class="disclaimer-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#c4703a"
+                                stroke-width="2">
+                                <path
+                                    d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                                <line x1="12" y1="9" x2="12" y2="13" />
+                                <line x1="12" y1="17" x2="12.01" y2="17" />
+                            </svg>
+                        </div>
+                        <div class="disclaimer-text">
+                            <strong>Pseudo-Diagnostic Disclaimer</strong><br>
+                            The information generated with this option is an <strong>AI-generated
+                                pseudo-diagnosis</strong> — it is <strong>not clinically valid</strong> and does not
+                            constitute a formal diagnosis under any standard. The conditions suggested are potential
+                            associations, hints, and common comorbidity patterns based on your schema profile. They
+                            represent what a clinician <em>might consider exploring</em>, not what you have. Only a
+                            licensed professional using validated structured interviews can make a clinical diagnosis.
+                            Use this as a starting point for self-awareness and informed conversation with a therapist —
+                            nothing more.
+                        </div>
+                    </div>
+                </div>
+
+                <div id="aiEvalStatus" class="ai-eval-status"></div>
+                <div id="aiEvalResult" class="ai-eval-result" style="display:none;"></div>
+
+                <!-- Differential Diagnostic Questionnaire (dynamically populated) -->
+                <div id="diffDxSection" style="display:none;">
+                    <div class="diff-dx-header">
+                        <div class="results-section-title" style="margin-top:48px;">
+                            <span>Differential Diagnostic Screening</span>
+                        </div>
+                        <div class="diff-dx-intro">
+                            Based on your schema profile, the following clinical questions help differentiate between
+                            conditions that commonly present with these patterns. Answer each as it applies to you
+                            <strong>over the past 12 months</strong>. This is not a diagnostic test — it provides
+                            additional context for the AI evaluation.
+                        </div>
+                    </div>
+                    <div id="diffDxQuestions" class="diff-dx-questions"></div>
+                    <div class="diff-dx-progress-row">
+                        <div class="diff-dx-progress-text" id="diffDxProgressText">0 / 0 answered</div>
+                        <button class="submit-btn" id="diffDxSubmitBtn" onclick="submitDiffDx()">Generate Diagnostic
+                            Impressions</button>
+                    </div>
+                    <div id="diffDxStatus" class="ai-eval-status"></div>
+                    <div id="diffDxResult" class="ai-eval-result" style="display:none;"></div>
+                </div>
+            </div>
+
+            <div class="submit-wrap" style="padding-top:24px;">
+                <button class="submit-btn" onclick="retake()" style="background:var(--muted);">Retake
+                    Questionnaire</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/markdown.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/results.js"></script>
+    <script src="js/ai-eval.js"></script>
+    <script src="js/ai-diffdx.js"></script>
+    <script src="js/questionnaire.js"></script>
+</body>
+</html>
