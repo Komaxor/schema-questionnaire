@@ -83,3 +83,16 @@
             updateProgress();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
+
+        // TEST: Preset answers — remove when no longer needed
+        const TEST_ANSWERS = '54255534522454321112211221111221111322421212232112321432312464212323221211154343154211212221';
+        function TEST_fillAnswers() {
+            const answers = TEST_ANSWERS.slice(0, 90);
+            for (let i = 0; i < answers.length; i++) {
+                const radio = document.querySelector('input[name="q' + (i + 1) + '"][value="' + answers[i] + '"]');
+                if (radio) radio.checked = true;
+            }
+            updateProgress();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        // END TEST

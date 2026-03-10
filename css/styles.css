@@ -997,6 +997,49 @@ body {
     margin-bottom: 10px;
 }
 
+/* Follow-up answer area with toggle */
+.diff-dx-answer-area {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.diff-dx-answer-area .diff-dx-freetext-wrap {
+    flex: 1 1 100%;
+    margin-top: 0;
+}
+
+.freetext-toggle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1.5px solid var(--line);
+    background: transparent;
+    color: var(--muted);
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+    line-height: 1;
+    padding: 0;
+    align-self: center;
+}
+
+.freetext-toggle:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+}
+
+.freetext-toggle.active {
+    background: var(--gold);
+    border-color: var(--gold);
+    color: white;
+}
+
 .diff-dx-options {
     display: flex;
     flex-wrap: wrap;
@@ -1041,6 +1084,34 @@ body {
 .diff-dx-progress-text {
     font-size: 13px;
     color: var(--muted);
+}
+
+/* Round separator for follow-up questions */
+.diff-dx-round-separator {
+    text-align: center;
+    margin: 28px 0 20px;
+    position: relative;
+}
+
+.diff-dx-round-separator::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--line);
+}
+
+.diff-dx-round-separator span {
+    position: relative;
+    background: var(--paper);
+    padding: 0 16px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 /* Freetext question input */
