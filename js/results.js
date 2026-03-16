@@ -8,43 +8,42 @@
         }
 
         function levelLabel(score) {
-            if (score >= 5) return 'High';
-            if (score >= 4) return 'Elevated';
-            if (score >= 3) return 'Moderate';
-            return 'Low';
+            const levels = I18N.t('levels');
+            if (score >= 5) return levels.high;
+            if (score >= 4) return levels.elevated;
+            if (score >= 3) return levels.moderate;
+            return levels.low;
         }
 
         function buildResults() {
-            // Compute schema scores
             const schemaScores = SCHEMAS.map(s => {
+                const t = I18N.t('schemas')[s.id - 1];
                 const vals = s.qs.map(getScore);
                 const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
-                return { ...s, score: parseFloat(avg.toFixed(2)) };
+                return { ...s, name: t.name, short: t.short, desc: t.desc, score: parseFloat(avg.toFixed(2)) };
             });
 
-            // Compute domain scores
             const domainScores = DOMAINS.map(d => {
+                const t = I18N.t('domains')[d.id - 1];
                 const relevant = schemaScores.filter(s => d.schemas.includes(s.id));
                 const avg = relevant.reduce((a, b) => a + b.score, 0) / relevant.length;
-                return { ...d, score: parseFloat(avg.toFixed(2)) };
+                return { ...d, name: t.name, score: parseFloat(avg.toFixed(2)) };
             });
 
-            // Summary stats
             const elevated = schemaScores.filter(s => s.score >= 4).length;
             const highest = schemaScores.reduce((a, b) => a.score > b.score ? a : b);
             const overall = schemaScores.reduce((a, b) => a + b.score, 0) / schemaScores.length;
 
             document.getElementById('summaryStats').innerHTML = `
-      <div class="stat-card"><div class="stat-val">${overall.toFixed(1)}</div><div class="stat-label">Overall Average</div></div>
-      <div class="stat-card"><div class="stat-val">${elevated}</div><div class="stat-label">Elevated Schemas (≥4.0)</div></div>
-      <div class="stat-card"><div class="stat-val">${highest.short}</div><div class="stat-label">Highest Schema</div></div>
+      <div class="stat-card"><div class="stat-val">${overall.toFixed(1)}</div><div class="stat-label">${I18N.t('ui.overallAverage')}</div></div>
+      <div class="stat-card"><div class="stat-val">${elevated}</div><div class="stat-label">${I18N.t('ui.elevatedSchemas')}</div></div>
+      <div class="stat-card"><div class="stat-val">${highest.short}</div><div class="stat-label">${I18N.t('ui.highestSchema')}</div></div>
     `;
 
-            // All schemas bar chart
             const barsEl = document.getElementById('allSchemasBars');
             barsEl.innerHTML = schemaScores.map(s => `
       <div class="bar-row">
-        <div class="bar-label">${s.short}<small>Schema ${s.id}</small></div>
+        <div class="bar-label">${s.short}<small>${I18N.t('ui.schemaLabel')} ${s.id}</small></div>
         <div class="bar-track">
           <div class="bar-fill" style="width:${(s.score / 6) * 100}%; background:${barColor(s.score)};"></div>
         </div>
@@ -52,7 +51,6 @@
       </div>
     `).join('');
 
-            // Domain bars
             const domainEl = document.getElementById('domainBars');
             domainEl.innerHTML = domainScores.map(d => `
       <div class="domain-bar-row">
@@ -66,9 +64,11 @@
       </div>
     `).join('');
 
-            // Top 5
             const top5 = [...schemaScores].sort((a, b) => b.score - a.score).slice(0, 5);
-            const domainName = id => DOMAINS.find(d => d.schemas.includes(id)).name;
+            const domainName = id => {
+                const di = DOMAINS.findIndex(d => d.schemas.includes(id));
+                return I18N.t('domains')[di].name;
+            };
             const topEl = document.getElementById('topSchemas');
             topEl.innerHTML = top5.map((s, i) => {
                 const cls = s.score >= 5 ? 'high' : s.score >= 4 ? 'elevated' : '';
@@ -78,18 +78,16 @@
           <div>
             <div class="top-schema-name">${s.name}</div>
             <div class="top-schema-desc">${s.desc}</div>
-            <div class="top-schema-domain">Domain: ${domainName(s.id)}</div>
+            <div class="top-schema-domain">${I18N.t('ui.domainLabel')}: ${domainName(s.id)}</div>
           </div>
           <div class="top-score-badge" style="color:${barColor(s.score)}">${s.score}</div>
         </div>
       `;
             }).join('');
 
-            // Show results, hide form
             document.getElementById('resultsPanel').style.display = 'block';
             document.getElementById('resultsPanel').scrollIntoView({ behavior: 'smooth' });
 
-            // Animate bars after brief delay
             setTimeout(() => {
                 document.querySelectorAll('.bar-fill, .domain-bar-fill').forEach(el => {
                     const w = el.style.width;

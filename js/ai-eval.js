@@ -14,18 +14,31 @@ function escapeHtml(str) {
     return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+// ─── Language instruction for AI prompts ────────────────────────
+
+function langInstruction() {
+    const inst = I18N.t('ai.responseLanguageInstruction');
+    const ctx = I18N.t('ai.clinicalContext');
+    let result = '';
+    if (inst) result += '\n\n' + inst;
+    if (ctx) result += '\n\n' + ctx;
+    return result;
+}
+
 // ─── Score Helpers ──────────────────────────────────────────────
 
 function buildScorePayload() {
     const schemaScores = SCHEMAS.map(s => {
+        const t = I18N.t('schemas')[s.id - 1];
         const vals = s.qs.map(getScore);
         const avg = vals.reduce((a, b) => a + b, 0) / vals.length;
-        return { id: s.id, name: s.name, short: s.short, domain: s.domain, score: parseFloat(avg.toFixed(2)), desc: s.desc };
+        return { id: s.id, name: t.name, short: t.short, domain: s.domain, score: parseFloat(avg.toFixed(2)), desc: t.desc };
     });
     const domainScores = DOMAINS.map(d => {
+        const t = I18N.t('domains')[d.id - 1];
         const relevant = schemaScores.filter(s => d.schemas.includes(s.id));
         const avg = relevant.reduce((a, b) => a + b.score, 0) / relevant.length;
-        return { name: d.name, score: parseFloat(avg.toFixed(2)) };
+        return { name: t.name, score: parseFloat(avg.toFixed(2)) };
     });
     const overall = schemaScores.reduce((a, b) => a + b.score, 0) / schemaScores.length;
     const elevated = schemaScores.filter(s => s.score >= 4);
@@ -77,21 +90,21 @@ async function callOpenAI(apiKey, systemPrompt, userPrompt, opts = {}) {
         });
     } catch (networkErr) {
         if (location.protocol === 'file:') {
-            throw new Error('Network request blocked — this page must be served via HTTP, not opened as a local file. Run a local server (e.g. "npx serve" or "python3 -m http.server") and open http://localhost:… instead.');
+            throw new Error(I18N.t('ai.networkBlockedFile'));
         }
-        throw new Error('Network request failed — check your internet connection and try again. (' + networkErr.message + ')');
+        throw new Error(I18N.t('ai.networkFailed') + ' (' + networkErr.message + ')');
     }
 
     if (!response.ok) {
         const err = await response.json().catch(() => ({}));
-        if (response.status === 401) throw new Error('Invalid API key. Check your key and try again.');
-        if (response.status === 429) throw new Error('Rate limit exceeded. Wait a moment and try again.');
+        if (response.status === 401) throw new Error(I18N.t('ai.invalidApiKey'));
+        if (response.status === 429) throw new Error(I18N.t('ai.rateLimited'));
         throw new Error(err.error?.message || `API returned status ${response.status}`);
     }
 
     const json = await response.json();
     const content = json.choices?.[0]?.message?.content;
-    if (!content) throw new Error('No content returned from API.');
+    if (!content) throw new Error(I18N.t('ai.noContent'));
     return content;
 }
 
@@ -117,15 +130,15 @@ async function callOpenAIStream(apiKey, systemPrompt, userPrompt, onChunk, opts 
         });
     } catch (networkErr) {
         if (location.protocol === 'file:') {
-            throw new Error('Network request blocked — this page must be served via HTTP, not opened as a local file. Run a local server (e.g. "npx serve" or "python3 -m http.server") and open http://localhost:… instead.');
+            throw new Error(I18N.t('ai.networkBlockedFile'));
         }
-        throw new Error('Network request failed — check your internet connection and try again. (' + networkErr.message + ')');
+        throw new Error(I18N.t('ai.networkFailed') + ' (' + networkErr.message + ')');
     }
 
     if (!response.ok) {
         const err = await response.json().catch(() => ({}));
-        if (response.status === 401) throw new Error('Invalid API key. Check your key and try again.');
-        if (response.status === 429) throw new Error('Rate limit exceeded. Wait a moment and try again.');
+        if (response.status === 401) throw new Error(I18N.t('ai.invalidApiKey'));
+        if (response.status === 429) throw new Error(I18N.t('ai.rateLimited'));
         throw new Error(err.error?.message || `API returned status ${response.status}`);
     }
 
@@ -161,8 +174,8 @@ async function startEvaluation() {
     const apiKey = document.getElementById('apiKeyInput').value.trim();
     const statusEl = document.getElementById('aiEvalStatus');
 
-    if (!apiKey) { statusEl.textContent = 'Please enter your OpenAI API key above.'; statusEl.className = 'ai-eval-status error'; return; }
-    if (!apiKey.startsWith('sk-')) { statusEl.textContent = 'Invalid key format — OpenAI keys begin with "sk-".'; statusEl.className = 'ai-eval-status error'; return; }
+    if (!apiKey) { statusEl.textContent = I18N.t('ai.noApiKey'); statusEl.className = 'ai-eval-status error'; return; }
+    if (!apiKey.startsWith('sk-')) { statusEl.textContent = I18N.t('ai.invalidKey'); statusEl.className = 'ai-eval-status error'; return; }
 
     // Reset state
     followUpQuestionsData = [];
@@ -171,7 +184,7 @@ async function startEvaluation() {
 
     const btn = document.getElementById('aiEvalBtn');
     btn.disabled = true; btn.style.opacity = '0.5';
-    statusEl.innerHTML = '<span class="spinner"></span> Analysing your profile and generating follow-up questions…';
+    statusEl.innerHTML = '<span class="spinner"></span> ' + I18N.t('ai.analysing');
     statusEl.className = 'ai-eval-status';
     document.getElementById('aiEvalResult').style.display = 'none';
     document.getElementById('followUpSection').style.display = 'none';
@@ -182,7 +195,7 @@ async function startEvaluation() {
     try {
         await generateQuestions(apiKey, scoresText);
     } catch (err) {
-        statusEl.textContent = 'Error: ' + err.message;
+        statusEl.textContent = I18N.t('ai.errorPrefix') + err.message;
         statusEl.className = 'ai-eval-status error';
     } finally {
         btn.disabled = false; btn.style.opacity = '1';
@@ -265,7 +278,7 @@ RULES:
   }
 ]
 
-Generate as many questions as the clinical picture warrants — let the complexity of the profile guide you. A complex multi-schema profile with several high-severity elevations may need 30+ questions across many categories; a simpler profile with few elevations may need only 15. Every question should earn its place by providing clinical signal the YSQ alone cannot.`;
+Generate as many questions as the clinical picture warrants — let the complexity of the profile guide you. A complex multi-schema profile with several high-severity elevations may need 30+ questions across many categories; a simpler profile with few elevations may need only 15. Every question should earn its place by providing clinical signal the YSQ alone cannot.` + langInstruction();
 
     const userMsg = `Here is the schema profile to generate follow-up questions for:\n\n${scoresText}\n\nGenerate the JSON array of categorised follow-up questions now.`;
 
@@ -276,18 +289,14 @@ Generate as many questions as the clinical picture warrants — let the complexi
     });
 
     const parsed = JSON.parse(content);
-    // Handle both direct array and wrapped object (e.g. {"categories": [...]})
     let categories = Array.isArray(parsed) ? parsed : (parsed.categories || parsed.questions || Object.values(parsed)[0]);
-    if (!Array.isArray(categories)) throw new Error('Unexpected response format from API.');
+    if (!Array.isArray(categories)) throw new Error(I18N.t('ai.unexpectedFormat'));
 
-    // Detect flat question arrays (items have 'text' but no 'questions') vs category arrays
     if (categories.length > 0 && categories[0].text && !categories[0].questions) {
-        // API returned a flat list of questions — wrap into a single category
-        categories = [{ category: 'Follow-Up Questions', questions: categories }];
+        categories = [{ category: I18N.t('ai.defaultCategoryName'), questions: categories }];
     }
-    // Ensure every category has a questions array
     categories = categories.filter(cat => Array.isArray(cat.questions) && cat.questions.length > 0);
-    if (categories.length === 0) throw new Error('No valid question categories returned from API.');
+    if (categories.length === 0) throw new Error(I18N.t('ai.noCategories'));
 
     followUpQuestionsData = categories;
 
@@ -306,7 +315,7 @@ function renderQuestions(categories, round, append) {
 
     let html = '';
     if (append) {
-        html += `<div class="diff-dx-round-separator"><span>Additional Questions</span></div>`;
+        html += `<div class="diff-dx-round-separator"><span>${I18N.t('ui.additionalQuestions')}</span></div>`;
     }
 
     let newQ = 0;
@@ -314,7 +323,7 @@ function renderQuestions(categories, round, append) {
         if (!cat || !Array.isArray(cat.questions)) return;
         const badgeNum = existingCats + ci + 1;
         html += `<div class="diff-dx-category">`;
-        html += `<div class="diff-dx-category-header"><div class="diff-dx-cat-badge">${badgeNum}</div>${escapeHtml(cat.category || 'Questions')}</div>`;
+        html += `<div class="diff-dx-category-header"><div class="diff-dx-cat-badge">${badgeNum}</div>${escapeHtml(cat.category || I18N.t('ai.defaultCategoryName'))}</div>`;
         if (cat.rationale) {
             html += `<div class="diff-dx-q-context" style="margin-bottom:14px;margin-top:-6px;">${escapeHtml(cat.rationale)}</div>`;
         }
@@ -327,18 +336,18 @@ function renderQuestions(categories, round, append) {
 
             if (q.type === 'freetext') {
                 html += `<div class="diff-dx-freetext-wrap">`;
-                html += `<textarea class="diff-dx-freetext" name="${qid}" placeholder="${escapeHtml(q.placeholder || 'Take your time — there are no right or wrong answers…')}" oninput="onFollowUpAnswer('${qid}')"></textarea>`;
+                html += `<textarea class="diff-dx-freetext" name="${qid}" placeholder="${escapeHtml(q.placeholder || I18N.t('ai.freeTextDefaultPlaceholder'))}" oninput="onFollowUpAnswer('${qid}')"></textarea>`;
                 html += `</div>`;
             } else if (q.type === 'boolean') {
                 html += `<div class="diff-dx-answer-area">`;
                 html += `<div class="diff-dx-options">`;
-                html += `<input type="radio" name="${qid}" id="${qid}_yes" value="Yes" onchange="onFollowUpAnswer('${qid}')">`;
-                html += `<label for="${qid}_yes">Yes</label>`;
-                html += `<input type="radio" name="${qid}" id="${qid}_no" value="No" onchange="onFollowUpAnswer('${qid}')">`;
-                html += `<label for="${qid}_no">No</label>`;
+                html += `<input type="radio" name="${qid}" id="${qid}_yes" value="${I18N.t('ai.yes')}" onchange="onFollowUpAnswer('${qid}')">`;
+                html += `<label for="${qid}_yes">${I18N.t('ai.yes')}</label>`;
+                html += `<input type="radio" name="${qid}" id="${qid}_no" value="${I18N.t('ai.no')}" onchange="onFollowUpAnswer('${qid}')">`;
+                html += `<label for="${qid}_no">${I18N.t('ai.no')}</label>`;
                 html += `</div>`;
-                html += `<div class="diff-dx-freetext-wrap" style="display:none"><textarea class="diff-dx-freetext" name="${qid}_ft" placeholder="Express your thoughts freely…" oninput="onFollowUpAnswer('${qid}')"></textarea></div>`;
-                html += `<button type="button" class="freetext-toggle" title="Switch to free text" onclick="toggleFollowUpFreeText('${qid}', this)">✎</button>`;
+                html += `<div class="diff-dx-freetext-wrap" style="display:none"><textarea class="diff-dx-freetext" name="${qid}_ft" placeholder="${I18N.t('ai.freeTextPlaceholder')}" oninput="onFollowUpAnswer('${qid}')"></textarea></div>`;
+                html += `<button type="button" class="freetext-toggle" title="${I18N.t('ai.switchToFreeText')}" onclick="toggleFollowUpFreeText('${qid}', this)">✎</button>`;
                 html += `</div>`;
             } else {
                 const options = q.options || ['Never', 'Rarely', 'Sometimes', 'Often', 'Very Often'];
@@ -349,8 +358,8 @@ function renderQuestions(categories, round, append) {
                     html += `<label for="${qid}_${oi}">${escapeHtml(opt)}</label>`;
                 });
                 html += `</div>`;
-                html += `<div class="diff-dx-freetext-wrap" style="display:none"><textarea class="diff-dx-freetext" name="${qid}_ft" placeholder="Express your thoughts freely…" oninput="onFollowUpAnswer('${qid}')"></textarea></div>`;
-                html += `<button type="button" class="freetext-toggle" title="Switch to free text" onclick="toggleFollowUpFreeText('${qid}', this)">✎</button>`;
+                html += `<div class="diff-dx-freetext-wrap" style="display:none"><textarea class="diff-dx-freetext" name="${qid}_ft" placeholder="${I18N.t('ai.freeTextPlaceholder')}" oninput="onFollowUpAnswer('${qid}')"></textarea></div>`;
+                html += `<button type="button" class="freetext-toggle" title="${I18N.t('ai.switchToFreeText')}" onclick="toggleFollowUpFreeText('${qid}', this)">✎</button>`;
                 html += `</div>`;
             }
 
@@ -365,10 +374,10 @@ function renderQuestions(categories, round, append) {
         container.innerHTML = html;
     }
 
-    // Count ALL questions in container for progress
     const totalQ = container.querySelectorAll('.diff-dx-q-card').length;
     const answeredQ = container.querySelectorAll('.diff-dx-q-card.answered').length;
-    document.getElementById('followUpProgressText').textContent = `${answeredQ} / ${totalQ} answered`;
+    const tmpl = I18N.t('progress.answered');
+    document.getElementById('followUpProgressText').textContent = tmpl.replace('{0}', answeredQ).replace('{1}', totalQ);
     container.dataset.total = totalQ;
 }
 
@@ -384,12 +393,12 @@ function toggleFollowUpFreeText(qid, btn) {
         ftWrap.style.display = 'none';
         options.style.display = 'flex';
         btn.classList.remove('active');
-        btn.title = 'Switch to free text';
+        btn.title = I18N.t('ai.switchToFreeText');
     } else {
         options.style.display = 'none';
         ftWrap.style.display = 'block';
         btn.classList.add('active');
-        btn.title = 'Switch back to options';
+        btn.title = I18N.t('ai.switchToOptions');
         ftWrap.querySelector('textarea').focus();
     }
     onFollowUpAnswer(qid);
@@ -399,7 +408,6 @@ function onFollowUpAnswer(qid) {
     const card = document.getElementById('card_' + qid);
     if (!card) return;
 
-    // Check if this card has a toggled free-text area that is visible
     const answerArea = card.querySelector('.diff-dx-answer-area');
     if (answerArea) {
         const ftWrap = answerArea.querySelector('.diff-dx-freetext-wrap');
@@ -407,12 +415,10 @@ function onFollowUpAnswer(qid) {
             const ta = ftWrap.querySelector('textarea');
             if (ta && ta.value.trim()) { card.classList.add('answered'); } else { card.classList.remove('answered'); }
         } else {
-            // Radio selected
             const selected = card.querySelector(`input[name="${qid}"]:checked`);
             if (selected) { card.classList.add('answered'); } else { card.classList.remove('answered'); }
         }
     } else {
-        // Pure freetext card (no answer-area wrapper)
         const textarea = card.querySelector('textarea');
         if (textarea) {
             if (textarea.value.trim()) { card.classList.add('answered'); } else { card.classList.remove('answered'); }
@@ -424,35 +430,36 @@ function onFollowUpAnswer(qid) {
     const container = document.getElementById('followUpQuestions');
     const total = parseInt(container.dataset.total || 0);
     const answered = container.querySelectorAll('.diff-dx-q-card.answered').length;
-    document.getElementById('followUpProgressText').textContent = `${answered} / ${total} answered`;
+    const tmpl = I18N.t('progress.answered');
+    document.getElementById('followUpProgressText').textContent = tmpl.replace('{0}', answered).replace('{1}', total);
 }
 
 function collectAnswers() {
-    let text = `FOLLOW-UP RESPONSES (Round ${currentRound}):\n\n`;
+    const roundTmpl = I18N.t('ai.followUpResponsesHeader');
+    let text = roundTmpl.replace('{0}', currentRound) + `:\n\n`;
     followUpQuestionsData.forEach((cat, ci) => {
         if (!cat || !Array.isArray(cat.questions)) return;
-        text += `Category: ${cat.category}\n`;
+        text += `${I18N.t('ai.categoryLabel')}: ${cat.category}\n`;
         cat.questions.forEach((q, qi) => {
             const qid = `fu_r${currentRound}_${ci}_${qi}`;
-            let val = 'Not answered';
+            let val = I18N.t('ai.notAnswered');
 
             if (q.type === 'freetext') {
                 const textarea = document.querySelector(`textarea[name="${qid}"]`);
                 if (textarea && textarea.value.trim()) val = textarea.value.trim();
             } else {
-                // Check if user toggled to free-text mode
                 const card = document.getElementById('card_' + qid);
                 const ftWrap = card?.querySelector('.diff-dx-freetext-wrap');
                 if (ftWrap && ftWrap.style.display !== 'none') {
                     const ta = ftWrap.querySelector('textarea');
-                    if (ta && ta.value.trim()) val = '[Free text] ' + ta.value.trim();
+                    if (ta && ta.value.trim()) val = I18N.t('ai.freeTextPrefix') + ta.value.trim();
                 } else {
                     const selected = document.querySelector(`input[name="${qid}"]:checked`);
                     if (selected) val = selected.value;
                 }
             }
 
-            text += `  Q: ${q.text}\n  A: ${val}\n`;
+            text += `  ${I18N.t('ai.questionLabel')}: ${q.text}\n  ${I18N.t('ai.answerLabel')}: ${val}\n`;
         });
         text += '\n';
     });
@@ -478,16 +485,17 @@ async function submitAnswers() {
                 break;
             }
         }
-        statusEl.textContent = `${total - answered} question(s) still unanswered. First unanswered highlighted above.`;
+        const tmpl = I18N.t('ai.unansweredFollowUp');
+        statusEl.textContent = tmpl.replace('{0}', total - answered);
         statusEl.className = 'ai-eval-status error';
         return;
     }
 
-    if (!apiKey) { statusEl.textContent = 'API key required — enter it above.'; statusEl.className = 'ai-eval-status error'; return; }
+    if (!apiKey) { statusEl.textContent = I18N.t('ai.apiKeyRequired'); statusEl.className = 'ai-eval-status error'; return; }
 
     const btn = document.getElementById('followUpSubmitBtn');
     btn.disabled = true; btn.style.opacity = '0.5';
-    statusEl.innerHTML = '<span class="spinner"></span> Analysing your responses…';
+    statusEl.innerHTML = '<span class="spinner"></span> ' + I18N.t('ai.analysingResponses');
     statusEl.className = 'ai-eval-status';
 
     const answersText = collectAnswers();
@@ -496,12 +504,11 @@ async function submitAnswers() {
     const data = buildScorePayload();
     const scoresText = formatScoresForPrompt(data);
 
-    // Round 2+: skip sufficiency check, go straight to evaluation
     if (currentRound >= 2) {
         try {
             await generateFinalEvaluation(apiKey, scoresText);
         } catch (err) {
-            statusEl.textContent = 'Error: ' + err.message;
+            statusEl.textContent = I18N.t('ai.errorPrefix') + err.message;
             statusEl.className = 'ai-eval-status error';
             document.getElementById('aiEvalResult').style.display = 'none';
         } finally {
@@ -510,7 +517,6 @@ async function submitAnswers() {
         return;
     }
 
-    // Round 1: check sufficiency
     const allAnswers = answersHistory.join('\n');
 
     const sysPrompt = `You are a licensed clinical psychologist with specialised training in Schema Therapy (Young, Klosko & Weishaar, 2003). You are reviewing a completed YSQ-S3 profile and the client's follow-up responses to determine whether you have sufficient clinical data to write a comprehensive schema-focused evaluation.
@@ -536,7 +542,7 @@ If follow-up genuinely needed:
   {"category": "Category Name", "rationale": "Why needed", "questions": [
     {"id": "q1", "type": "choice|boolean|freetext", "text": "Question?", "options": ["..."] (for choice only), "placeholder": "..." (for freetext only), "context": "Clinical note"}
   ]}
-]}`;
+]}` + langInstruction();
 
     const userMsg = `Schema profile:\n\n${scoresText}\n\n${allAnswers}\n\nDo you have sufficient information to write a comprehensive evaluation? Output JSON.`;
 
@@ -554,7 +560,7 @@ If follow-up genuinely needed:
             followUpQuestionsData = decision.questions;
             renderQuestions(decision.questions, 2, true);
             if (decision.reason) {
-                statusEl.innerHTML = `<em>${escapeHtml(decision.reason)}</em> — Please answer the additional questions below.`;
+                statusEl.innerHTML = `<em>${escapeHtml(decision.reason)}</em> — ${I18N.t('ai.pleaseAnswerAdditional')}`;
             } else {
                 statusEl.textContent = '';
             }
@@ -566,7 +572,7 @@ If follow-up genuinely needed:
         }
 
     } catch (err) {
-        statusEl.textContent = 'Error: ' + err.message;
+        statusEl.textContent = I18N.t('ai.errorPrefix') + err.message;
         statusEl.className = 'ai-eval-status error';
         document.getElementById('aiEvalResult').style.display = 'none';
         btn.disabled = false; btn.style.opacity = '1';
@@ -700,7 +706,7 @@ async function generateFinalEvaluation(apiKey, scoresText) {
     const statusEl = document.getElementById('followUpStatus');
     const resultEl = document.getElementById('aiEvalResult');
 
-    statusEl.innerHTML = '<span class="spinner"></span> Generating comprehensive clinical evaluation…';
+    statusEl.innerHTML = '<span class="spinner"></span> ' + I18N.t('ai.generating');
     statusEl.className = 'ai-eval-status';
 
     const allAnswers = answersHistory.join('\n');
@@ -708,8 +714,8 @@ async function generateFinalEvaluation(apiKey, scoresText) {
 
     resultEl.innerHTML = `
         <div class="eval-header">
-          <div class="eval-header-label">AI-Generated Clinical Evaluation</div>
-          <div class="eval-header-title">Comprehensive Schema Profile Analysis</div>
+          <div class="eval-header-label">${I18N.t('ai.evalHeaderLabel')}</div>
+          <div class="eval-header-title">${I18N.t('ai.evalHeaderTitle')}</div>
         </div>
         <div class="eval-body" id="evalBodyStream"></div>
         <div class="eval-footer" id="evalFooter" style="display:none;"></div>
@@ -719,9 +725,11 @@ async function generateFinalEvaluation(apiKey, scoresText) {
 
     const bodyEl = document.getElementById('evalBodyStream');
 
+    const evalPrompt = EVAL_SYSTEM_PROMPT + langInstruction();
+    const reviewPrompt = REVIEW_SYSTEM_PROMPT + langInstruction();
+
     try {
-        // Phase 1: Generate draft evaluation (streaming for user feedback)
-        const draftText = await callOpenAIStream(apiKey, EVAL_SYSTEM_PROMPT, userPrompt, (_token, full) => {
+        const draftText = await callOpenAIStream(apiKey, evalPrompt, userPrompt, (_token, full) => {
             bodyEl.innerHTML = renderEvalMarkdown(full);
         }, {
             temperature: 0.5,
@@ -730,23 +738,24 @@ async function generateFinalEvaluation(apiKey, scoresText) {
 
         bodyEl.innerHTML = renderEvalMarkdown(draftText);
 
-        // Phase 2: Clinical peer review pass
-        statusEl.innerHTML = '<span class="spinner"></span> Clinical review in progress — verifying accuracy and refining…';
+        statusEl.innerHTML = '<span class="spinner"></span> ' + I18N.t('ai.reviewing');
 
         const reviewUserPrompt = `ORIGINAL DATA:\n\n${scoresText}\n\n${allAnswers}\n\n---\n\nDRAFT EVALUATION TO REVIEW:\n\n${draftText}\n\n---\n\nReview this evaluation against the original data. Output the complete revised evaluation.`;
 
-        const reviewedText = await callOpenAI(apiKey, REVIEW_SYSTEM_PROMPT, reviewUserPrompt, {
+        const reviewedText = await callOpenAI(apiKey, reviewPrompt, reviewUserPrompt, {
             temperature: 0.2,
             max_completion_tokens: 16384
         });
 
         bodyEl.innerHTML = renderEvalMarkdown(reviewedText);
         const footerEl = document.getElementById('evalFooter');
-        footerEl.textContent = `Generated and peer-reviewed by ${AI_MODEL} · ${new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })} · This evaluation is AI-generated and does not constitute a clinical diagnosis or professional psychological assessment. It integrates self-report questionnaire data and follow-up responses for self-reflection and educational purposes only.`;
+        const dateStr = new Date().toLocaleDateString(I18N.currentLang() === 'en' ? 'en-GB' : I18N.currentLang(), { day: 'numeric', month: 'long', year: 'numeric' });
+        const tmpl = I18N.t('ai.evalFooter');
+        footerEl.textContent = tmpl.replace('{0}', AI_MODEL).replace('{1}', dateStr);
         footerEl.style.display = '';
         statusEl.textContent = '';
     } catch (err) {
-        statusEl.textContent = 'Error: ' + err.message;
+        statusEl.textContent = I18N.t('ai.errorPrefix') + err.message;
         statusEl.className = 'ai-eval-status error';
         resultEl.style.display = 'none';
     }

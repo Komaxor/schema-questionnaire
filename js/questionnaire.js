@@ -1,21 +1,115 @@
-// js/questionnaire.js — Radio button builder, progress tracking, form submission, retake
+// js/questionnaire.js — Dynamic question rendering, radio buttons, progress tracking, form submission, retake
 
-        // Build radio buttons
-        for (let i = 1; i <= TOTAL; i++) {
-            const container = document.getElementById('q' + i);
-            if (!container) continue;
-            for (let v = 1; v <= 6; v++) {
-                const input = document.createElement('input');
-                input.type = 'radio';
-                input.name = 'q' + i;
-                input.id = 'q' + i + '_' + v;
-                input.value = v;
-                const label = document.createElement('label');
-                label.htmlFor = 'q' + i + '_' + v;
-                label.textContent = v;
-                container.appendChild(input);
-                container.appendChild(label);
+        // Render the entire questionnaire from translation data
+        function renderQuestionnaire() {
+            const main = document.getElementById('questionnaireMain');
+            const questions = I18N.t('questions');
+            const schemas = I18N.t('schemas');
+            const domains = I18N.t('domains');
+            let html = '';
+
+            DOMAINS.forEach((d, di) => {
+                const dt = domains[di];
+                html += `<div class="domain-block">`;
+                html += `<div class="domain-header">`;
+                html += `<div class="domain-number">${DOMAIN_NUMERALS[di]}</div>`;
+                html += `<div class="domain-info">`;
+                html += `<div class="domain-name">${dt.name}</div>`;
+                html += `<div class="domain-subtitle">${dt.subtitle}</div>`;
+                html += `</div></div>`;
+
+                d.schemas.forEach(sid => {
+                    const s = SCHEMAS.find(s => s.id === sid);
+                    const st = schemas[sid - 1];
+                    html += `<div class="schema-block">`;
+                    html += `<div class="schema-header">`;
+                    html += `<div class="schema-badge">${s.id}</div>`;
+                    html += `<div class="schema-name">${st.name}</div>`;
+                    html += `<div class="schema-desc">${st.headerDesc}</div>`;
+                    html += `</div>`;
+                    html += `<div class="questions">`;
+                    s.qs.forEach(q => {
+                        html += `<div class="question-row">`;
+                        html += `<div class="question-text" data-q="${q}">${questions[q - 1]}</div>`;
+                        html += `<div class="rating-group" id="q${q}"></div>`;
+                        html += `</div>`;
+                    });
+                    html += `</div></div>`;
+                });
+
+                html += `</div>`;
+            });
+
+            main.innerHTML = html;
+
+            // Build radio buttons
+            for (let i = 1; i <= TOTAL; i++) {
+                const container = document.getElementById('q' + i);
+                if (!container) continue;
+                for (let v = 1; v <= 6; v++) {
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = 'q' + i;
+                    input.id = 'q' + i + '_' + v;
+                    input.value = v;
+                    const label = document.createElement('label');
+                    label.htmlFor = 'q' + i + '_' + v;
+                    label.textContent = v;
+                    container.appendChild(input);
+                    container.appendChild(label);
+                }
             }
+
+            document.querySelectorAll('input[type="radio"]').forEach(el => {
+                el.addEventListener('change', updateProgress);
+            });
+        }
+
+        // Render scale legend
+        function renderScaleLegend() {
+            const legend = document.getElementById('scaleLegend');
+            if (!legend) return;
+            const scale = I18N.t('scale');
+            legend.innerHTML = scale.map((s, i) =>
+                `<div class="scale-item"><span class="scale-num">${i + 1}</span> ${s}</div>`
+            ).join('');
+        }
+
+        // Update question texts only (for language switch without losing answers)
+        function renderQuestionTexts() {
+            const questions = I18N.t('questions');
+            const schemas = I18N.t('schemas');
+            const domains = I18N.t('domains');
+
+            // Update question texts
+            document.querySelectorAll('.question-text[data-q]').forEach(el => {
+                const q = parseInt(el.getAttribute('data-q'));
+                if (questions[q - 1]) el.textContent = questions[q - 1];
+            });
+
+            // Update schema headers
+            const schemaBlocks = document.querySelectorAll('.schema-block');
+            schemaBlocks.forEach((block, i) => {
+                if (!schemas[i]) return;
+                const nameEl = block.querySelector('.schema-name');
+                const descEl = block.querySelector('.schema-desc');
+                const badgeEl = block.querySelector('.schema-badge');
+                if (nameEl) nameEl.textContent = schemas[i].name;
+                if (descEl) descEl.textContent = schemas[i].headerDesc;
+            });
+
+            // Update domain headers
+            const domainBlocks = document.querySelectorAll('.domain-block');
+            domainBlocks.forEach((block, i) => {
+                if (!domains[i]) return;
+                const nameEl = block.querySelector('.domain-name');
+                const subtitleEl = block.querySelector('.domain-subtitle');
+                if (nameEl) nameEl.textContent = domains[i].name;
+                if (subtitleEl) subtitleEl.textContent = domains[i].subtitle;
+            });
+
+            // Update scale legend
+            renderScaleLegend();
         }
 
         // Progress tracking
@@ -25,13 +119,10 @@
                 if (document.querySelector('input[name="q' + i + '"]:checked')) answered++;
             }
             document.getElementById('progressFill').style.width = (answered / TOTAL * 100) + '%';
-            document.getElementById('progressText').textContent = answered + ' / ' + TOTAL + ' answered';
+            const tmpl = I18N.t('progress.answered');
+            document.getElementById('progressText').textContent = tmpl.replace('{0}', answered).replace('{1}', TOTAL);
             return answered;
         }
-
-        document.querySelectorAll('input[type="radio"]').forEach(el => {
-            el.addEventListener('change', updateProgress);
-        });
 
         function getScore(q) {
             const el = document.querySelector('input[name="q' + q + '"]:checked');
@@ -43,7 +134,6 @@
             const note = document.getElementById('submitNote');
 
             if (answered < TOTAL) {
-                // Find first unanswered and scroll to it
                 for (let i = 1; i <= TOTAL; i++) {
                     if (!document.querySelector('input[name="q' + i + '"]:checked')) {
                         const el = document.getElementById('q' + i);
@@ -58,12 +148,12 @@
                         break;
                     }
                 }
-                note.textContent = (TOTAL - answered) + ' question(s) still unanswered — first unanswered question highlighted above.';
+                const tmpl = I18N.t('progress.unanswered');
+                note.textContent = tmpl.replace('{0}', TOTAL - answered);
                 note.style.color = '#8b3a2a';
                 return;
             }
 
-            // All answered — score and show results
             buildResults();
         }
 
@@ -78,7 +168,6 @@
             followUpQuestionsData = [];
             answersHistory = [];
             currentRound = 0;
-            // Clear all answers
             document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
             updateProgress();
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -96,3 +185,8 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         // END TEST
+
+        // Initialize
+        renderQuestionnaire();
+        renderScaleLegend();
+        I18N.init();
